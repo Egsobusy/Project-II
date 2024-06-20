@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 export default function Profile() {
   const fileRef = useRef(null)
   const {currentUser, loading, error} = useSelector((state) => state.user);
-  const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
@@ -128,6 +127,12 @@ export default function Profile() {
         p-3 hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...' : 'Update'}</button>
         <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
           to={'/create-listing'}> Create Listing
+        </Link>
+        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
+          to={'/search'}> Create Booking
+        </Link>
+        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
+          to={'/booking'}> My Bookings
         </Link>
       </form>
       <div className='flex justify-between mt-5'>

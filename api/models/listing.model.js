@@ -1,5 +1,21 @@
 import mongoose from "mongoose";
 
+const reviewSchema = new mongoose.Schema(
+    {
+        user: {
+            type: String,
+            required: true,
+        },
+        rating: {
+            type: Number,
+            default: 0,
+        },
+        comment: {
+            type: String,
+        },
+    }, {timestamps: true}
+)
+
 const listingSchema = new mongoose.Schema(
     {
         name: {
@@ -26,19 +42,19 @@ const listingSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        rooms: {
-            type: Number,
-            required: true,
-        },
-        beds: {
-            type: Number,
-            required: true,
-        }, 
-        pet: {
+        smoking: {
             type: Boolean,
             required: true,
         },
-        pool: {
+        bar: {
+            type: Boolean,
+            required: true,
+        }, 
+        wifi: {
+            type: Boolean,
+            required: true,
+        },
+        parking: {
             type: Boolean,
             required: true,
         },
@@ -54,9 +70,18 @@ const listingSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        reviews: [reviewSchema],
+        ratings: {
+            type: Number,
+            default: 0,
+        },
+        numReviews: {
+            type: Number,
+            default: 0,
+        },
+
     }, {timestamps: true}
 )
 
 const Listing = mongoose.model('Listing', listingSchema);
-
 export default Listing;

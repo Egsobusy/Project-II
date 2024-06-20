@@ -21,10 +21,10 @@ export default function CreateListing() {
     address: '',
     regularPrice: 0,
     discountPrice: 0,
-    rooms: 1,
-    beds: 1,
-    pet: false,
-    pool: false,
+    smoking: false,
+    bar: false,
+    wifi: false,
+    parking: false,
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -99,8 +99,10 @@ export default function CreateListing() {
     }
 
     if (
-      e.target.id === 'pet' ||
-      e.target.id === 'pool' ||
+      e.target.id === 'wifi' ||
+      e.target.id === 'parking' ||
+      e.target.id === 'smoking' ||
+      e.target.id === 'bar' ||
       e.target.id === 'offer'
     ) {
       setFormData({
@@ -213,22 +215,44 @@ export default function CreateListing() {
             <div className='flex gap-2'>
             <input
                 type='checkbox'
-                id='pet'
+                id='wifi'
                 className='w-5'
                 onChange={handleChange}
-                checked={formData.pet}
+                checked={formData.wifi}
               />
-              <span>Pet allowed</span>
+              <span>Wifi</span>
             </div>
             <div className='flex gap-2'>
             <input
                 type='checkbox'
-                id='pool'
+                id='parking'
                 className='w-5'
                 onChange={handleChange}
-                checked={formData.pool}
+                checked={formData.parking}
               />
-              <span>Swimming pool</span>
+              <span>Parking</span>
+            </div>
+            <div className='flex gap-2'>
+              <input
+                type='checkbox'
+                id='bar'
+                required
+                className='w-5'
+                onChange={handleChange}
+                value={formData.bar}
+              />
+              <p>Bar</p>
+            </div>
+            <div className='flex gap-2'>
+              <input
+                type='checkbox'
+                id='smoking'
+                required
+                className='w-5'
+                onChange={handleChange}
+                value={formData.smoking}
+              />
+              <p>Smoking</p>
             </div>
             <div className='flex gap-2'>
             <input
@@ -242,32 +266,6 @@ export default function CreateListing() {
             </div>
           </div>
           <div className='flex flex-wrap gap-6'>
-            <div className='flex items-center gap-2'>
-              <input
-                type='number'
-                id='beds'
-                min='1'
-                max='10'
-                required
-                className='p-3 border border-gray-300 rounded-lg'
-                onChange={handleChange}
-                value={formData.beds}
-              />
-              <p>Beds</p>
-            </div>
-            <div className='flex items-center gap-2'>
-              <input
-                type='number'
-                id='rooms'
-                min='1'
-                max='10'
-                required
-                className='p-3 border border-gray-300 rounded-lg'
-                onChange={handleChange}
-                value={formData.rooms}
-              />
-              <p>Rooms</p>
-            </div>
             <div className='flex items-center gap-2'>
               <input
                 type='number'

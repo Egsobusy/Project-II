@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
     FaBath,
     FaBed,
@@ -17,36 +16,121 @@ import {
     FaBackward,
   } from 'react-icons/fa';
 
+import {
+  fetchItemStart, 
+  fetchItemSuccess,
+  fetchItemFailure,
+} from '../redux/slice/itemSlice';
+
 export default function Listing() {
   SwiperCore.use([Navigation]);
+  const { currentUser } = useSelector((state) => state.user);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [reviewListings, setReviewListings] = useState([]);
   const params = useParams();
-  const {currentUser} = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchListing = async () => {
       try {
+        dispatch(fetchItemStart());
         setLoading(true);
         const res = await fetch(`/api/listing/get/${params.listingId}`);
         const data = await res.json();
         if (data.success === false) {
+          dispatch(fetchItemFailure(data.message));
           setError(true);
           setLoading(false);
+          dispatch()
           return;
         }
+        dispatch(fetchItemSuccess(data));
+        setReviewListings(data.reviews);
+        setFormData(data);
         setListing(data);
         setLoading(false);
         setError(false);
       } catch (error) {
+        dispatch(fetchItemFailure(data.message));
         setError(true);
         setLoading(false);
       }
     };
     fetchListing();
   }, [params.listingId]);
+
+  const [formReview, setFormReview] = useState({
+    user: '',
+    rating: 0,
+    comment: '',
+  });
+
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+    name: '',
+    description: '',
+    address: '',
+    type: 'rent',
+    regularPrice: 50,
+    discountPrice: 0,
+    offer: false,
+    smoking: false,
+    bar: false,
+    wifi: false,
+    parking: false,
+    furnished: false,
+    reviews: [],
+    ratings: 0,
+    numReviews: 0,
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError(false);
+
+      setFormReview({
+        ...formReview,
+        user: currentUser.username,
+      });
+
+      console.log(currentUser.username);
+      console.log(formReview.user);
+
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          reviews: [...formData.reviews, formReview],
+          userRef: currentUser._id,
+        }),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (data.success === false) {
+        setError(data.message);
+      }
+      navigate(`/listing/${data._id}`);
+    } catch (error) {
+      console.log('errr');
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormReview({
+    ...formReview,
+    [e.target.id]: e.target.value,
+    });
+  };
 
   return (
     <main>
@@ -121,28 +205,85 @@ export default function Listing() {
             <ul className='text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6'>
               <li className='flex items-center gap-1 whitespace-nowrap '>
                 <FaBed className='text-lg' />
-                {listing.beds > 1
-                  ? `${listing.beds} beds `
-                  : `${listing.beds} bed `}
+                {listing.smoking ? 'Smoking allowed' : 'No smoking'}
               </li>
               <li className='flex items-center gap-1 whitespace-nowrap '>
                 <FaBath className='text-lg' />
-                {listing.bathrooms > 1
-                  ? `${listing.rooms} rooms `
-                  : `${listing.rooms} room `}
+                {listing.bar ? 'Bar' : 'No bar'}
               </li>
               <li className='flex items-center gap-1 whitespace-nowrap '>
                 <FaParking className='text-lg' />
-                {listing.pet ? 'Pet allowed' : 'No pet allowed'}
+                {listing.wifi ? 'Wifi' : 'No wifi'}
               </li>
               <li className='flex items-center gap-1 whitespace-nowrap '>
                 <FaChair className='text-lg' />
-                {listing.pool ? 'Have swimming pool' : 'No swimming pool'}
+                {listing.parking ? 'Have parking spots' : 'No parking spot'}
               </li>
             </ul>
-            <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to={"/create-listing"}>
+            <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to={"/create-booking"}>
                 Book
             </Link>
+
+            {reviewListings && reviewListings.length > 0 && (
+              <div className='flex flex-col gap-4'>
+                <h1 className='text-center mt-7 text-2xl font-semibold'>
+                  User Reviews
+                </h1>
+                {reviewListings.slice(0, 3).map((listing) => (
+
+                  <div key={listing._id}
+                    className="p-4 bg-white rounded-lg shadow-lg mb-4">
+                  <p className="font-semibold text-lg text-gray-800">{listing.user}</p>
+                  <div className="flex items-center mb-2">
+                    <span className="ml-2 text-gray-600">{listing.rating}/5</span>
+                  </div>
+                  <p className="text-gray-700">{listing.comment}</p>
+                  </div>
+                ))}
+                </div>
+            )}
+
+            {/* REVIEW SECTION */}
+            <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
+              <form onSubmit={handleSubmit}>
+                <p className="text-xl font-semibold mb-4 text-gray-900">Leave a Review</p>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Rating
+                  </label>
+                  <input
+                    type='number'
+                    id='rating'
+                    min='1'
+                    max='5'
+                    required
+                    className='p-3 border border-gray-300 rounded-lg'
+                    onChange={handleChange}
+                    value={formReview.rating}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Comment
+                  </label>
+                  <textarea
+                    type='text'
+                    placeholder='Comment'
+                    className="w-full h-32 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id='comment'
+                    required
+                    onChange={handleChange}
+                    value={formReview.comment}
+                  />
+                </div>
+                <button
+                  disabled={loading}
+                  className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  {loading ? 'Submitting...' : 'Submit comment'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}

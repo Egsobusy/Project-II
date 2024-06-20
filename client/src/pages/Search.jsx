@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import ListingItem from '../components/ListingItem.jsx';
 
 export default function Search() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [sidebardata, setSidebardata] = useState({
     searchTerm: '',
+    address: '',
     type: '',
-    pet: false,
-    pool: false,
+    smoking: false,
+    bar: false,
+    wifi: false,
+    parking: false,
     offer: false,
     sort: 'created_at',
     order: 'desc',
@@ -22,27 +25,36 @@ export default function Search() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get('searchTerm');
+    const addressFromUrl = urlParams.get('address');
     const typeFromUrl = urlParams.get('type');
-    const petFromUrl = urlParams.get('pet');
-    const poolFromUrl = urlParams.get('pool');
+    const barFromUrl = urlParams.get('bar');
+    const wifiFromUrl = urlParams.get('wifi');
+    const smokingFromUrl = urlParams.get('smoking');
+    const parkingFromUrl = urlParams.get('parking');
     const offerFromUrl = urlParams.get('offer');
     const sortFromUrl = urlParams.get('sort');
     const orderFromUrl = urlParams.get('order');
 
     if (
       searchTermFromUrl ||
+      addressFromUrl ||
       typeFromUrl ||
-      petFromUrl ||
-      poolFromUrl ||
+      barFromUrl ||
+      smokingFromUrl ||
+      wifiFromUrl || 
+      parkingFromUrl ||
       offerFromUrl ||
       sortFromUrl ||
       orderFromUrl
     ) {
       setSidebardata({
         searchTerm: searchTermFromUrl || '',
+        addressFromUrl: addressFromUrl || '',
         type: typeFromUrl || '',
-        pet: petFromUrl === 'true' ? true : false,
-        pool: poolFromUrl === 'true' ? true : false,
+        smoking: smokingFromUrl === 'true' ? true : false,
+        parking: parkingFromUrl === 'true' ? true : false,
+        wifi: wifiFromUrl === 'true' ? true : false,
+        bar: barFromUrl === 'true' ? true : false,
         offer: offerFromUrl === 'true' ? true : false,
         sort: sortFromUrl || 'created_at',
         order: orderFromUrl || 'desc',
@@ -79,9 +91,15 @@ export default function Search() {
       setSidebardata({ ...sidebardata, searchTerm: e.target.value });
     }
 
+    if (e.target.id === 'address') {
+      setSidebardata({ ...sidebardata, address: e.target.value });
+    }
+
     if (
-      e.target.id === 'pet' ||
-      e.target.id === 'pool' ||
+      e.target.id === 'smoking' ||
+      e.target.id === 'parking' ||
+      e.target.id === 'bar' ||
+      e.target.id === 'wifi' ||
       e.target.id === 'offer'
     ) {
       setSidebardata({
@@ -104,9 +122,12 @@ export default function Search() {
     e.preventDefault();
     const urlParams = new URLSearchParams();
     urlParams.set('searchTerm', sidebardata.searchTerm);
+    urlParams.set('address', sidebardata.address);
     urlParams.set('type', sidebardata.type);
-    urlParams.set('pet', sidebardata.pet);
-    urlParams.set('pool', sidebardata.pool);
+    urlParams.set('smoking', sidebardata.smoking);
+    urlParams.set('parking', sidebardata.parking);
+    urlParams.set('bar', sidebardata.bar);
+    urlParams.set('wifi', sidebardata.wifi);
     urlParams.set('offer', sidebardata.offer);
     urlParams.set('sort', sidebardata.sort);
     urlParams.set('order', sidebardata.order);
@@ -134,7 +155,7 @@ export default function Search() {
         <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
           <div className='flex items-center gap-2'>
             <label className='whitespace-nowrap font-semibold'>
-              Place:
+              Place name:
             </label>
             <input
               type='text'
@@ -142,6 +163,19 @@ export default function Search() {
               placeholder='Where are you going?'
               className='border rounded-lg p-3 w-full'
               value={sidebardata.searchTerm}
+              onChange={handleChange}
+            />
+          </div>
+          <div className='flex items-center gap-2'>
+            <label className='whitespace-nowrap font-semibold'>
+              Address:
+            </label>
+            <input
+              type='text'
+              id='address'
+              placeholder='Address?'
+              className='border rounded-lg p-3 w-full'
+              value={sidebardata.address}
               onChange={handleChange}
             />
           </div>
@@ -183,22 +217,42 @@ export default function Search() {
             <div className='flex gap-2'>
             <input
                 type='checkbox'
-                id='pet'
+                id='smoking'
                 className='w-5'
                 onChange={handleChange}
-                checked={sidebardata.pet}
+                checked={sidebardata.smoking}
               />
-              <span>Pet allowed</span>
+              <span>Smoking allowed</span>
             </div>
             <div className='flex gap-2'>
             <input
                 type='checkbox'
-                id='pool'
+                id='bar'
                 className='w-5'
                 onChange={handleChange}
-                checked={sidebardata.pool}
+                checked={sidebardata.bar}
               />
-              <span>Swimming pool</span>
+              <span>Bar</span>
+            </div>
+            <div className='flex gap-2'>
+            <input
+                type='checkbox'
+                id='wifi'
+                className='w-5'
+                onChange={handleChange}
+                checked={sidebardata.wifi}
+              />
+              <span>Wifi</span>
+            </div>
+            <div className='flex gap-2'>
+            <input
+                type='checkbox'
+                id='parking'
+                className='w-5'
+                onChange={handleChange}
+                checked={sidebardata.parking}
+              />
+              <span>Have parking spots</span>
             </div>
           </div>
           <div className='flex items-center gap-2'>
