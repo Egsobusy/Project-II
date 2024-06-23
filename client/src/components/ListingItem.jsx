@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MdLocationOn } from 'react-icons/md';
+import { FaStar } from 'react-icons/fa';
 
 export default function ListingItem({ listing }) {
   return (
@@ -31,11 +32,14 @@ export default function ListingItem({ listing }) {
             {listing.offer
               ? listing.discountPrice.toLocaleString('en-US')
               : listing.regularPrice.toLocaleString('en-US')}
-            {listing.type === 'resort' && ' / month'}
+            {' / night'}
           </p>
           <div className='text-slate-700 flex gap-4'>
-            <div className='font-bold text-xs'>
-              {`${listing.ratings} star`}
+            <div className='flex items-center gap-2 font-bold text-xs'>
+              <FaStar/>
+              {listing.numReviews > 0
+                ? `${(listing.ratings / listing.numReviews).toFixed(2)}`
+                : `No rated yet`}
             </div>
             <div className='font-bold text-xs'>
               {listing.numReviews > 1

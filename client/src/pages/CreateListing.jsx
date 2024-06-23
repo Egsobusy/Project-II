@@ -21,6 +21,7 @@ export default function CreateListing() {
     address: '',
     regularPrice: 0,
     discountPrice: 0,
+    offer: false,
     smoking: false,
     bar: false,
     wifi: false,
@@ -31,6 +32,7 @@ export default function CreateListing() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   console.log(formData);
+  
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -143,6 +145,7 @@ export default function CreateListing() {
         }),
       });
       const data = await res.json();
+      console.log(data);
       setLoading(false);
       if (data.success === false) {
         setError(data.message);
@@ -166,7 +169,7 @@ export default function CreateListing() {
             className='border p-3 rounded-lg'
             id='name'
             maxLength='62'
-            minLength='10'
+            minLength='1'
             required
             onChange={handleChange}
             value={formData.name}
@@ -236,7 +239,6 @@ export default function CreateListing() {
               <input
                 type='checkbox'
                 id='bar'
-                required
                 className='w-5'
                 onChange={handleChange}
                 value={formData.bar}
@@ -247,7 +249,6 @@ export default function CreateListing() {
               <input
                 type='checkbox'
                 id='smoking'
-                required
                 className='w-5'
                 onChange={handleChange}
                 value={formData.smoking}

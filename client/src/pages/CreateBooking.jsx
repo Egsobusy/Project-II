@@ -27,6 +27,14 @@ export default function CreateBooking() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
+    if (e.target.id === 'checkOutDay' && 
+    ((new Date (e.target.value)).getTime()
+    - (new Date (formData.checkInDay)) .getTime()) < 0)
+    {
+      alert('Check-out date cannot be before check-in date.');
+      e.target.value = '';
+    }
+      
     setFormData({
     ...formData,
     [e.target.id]: e.target.value,
@@ -58,7 +66,7 @@ export default function CreateBooking() {
       if (data.success === false) {
         setError(data.message);
       }
-      navigate(`/booking/${data._id}`);
+      navigate(`/profile`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -78,7 +86,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='placeName'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={currentItem.name}
@@ -90,7 +98,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='type'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={currentItem.type}
@@ -102,7 +110,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='address'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={currentItem.address}
@@ -114,7 +122,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='firstName'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.firstName}
@@ -125,7 +133,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='lastName'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.lastName}
@@ -136,7 +144,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='email'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.email}
@@ -147,7 +155,7 @@ export default function CreateBooking() {
                     className='border p-3 rounded-lg'
                     id='telephone'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.telephone}
@@ -187,7 +195,7 @@ export default function CreateBooking() {
                         type='number'
                         id='guests'
                         min='1'
-                        max='10'
+                        max='30'
                         required
                         className='p-3 border border-gray-300 rounded-lg'
                         onChange={handleChange}

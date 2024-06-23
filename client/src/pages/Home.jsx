@@ -12,7 +12,7 @@ export default function Home() {
   const [homestayListings, sethomestayListings] = useState([]);
   const [resortListings, setresortListings] = useState([]);
   SwiperCore.use([Navigation]);
-  console.log(offerListings);
+
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
@@ -29,6 +29,7 @@ export default function Home() {
         const res = await fetch('/api/listing/get?type=resort&limit=5');
         const data = await res.json();
         setresortListings(data);
+        console.log(data);
         fetchhomestayListings();
       } catch (error) {
         console.log(error);

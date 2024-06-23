@@ -6,14 +6,15 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-    FaBath,
-    FaBed,
-    FaChair,
-    FaMapMarkedAlt,
     FaMapMarkerAlt,
     FaParking,
+    FaSmoking,
+    FaWineGlass,
+    FaWifi,
     FaShare,
     FaBackward,
+    FaStar,
+    FaComment,
   } from 'react-icons/fa';
 
 import {
@@ -33,40 +34,6 @@ export default function Listing() {
   const params = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        dispatch(fetchItemStart());
-        setLoading(true);
-        const res = await fetch(`/api/listing/get/${params.listingId}`);
-        const data = await res.json();
-        if (data.success === false) {
-          dispatch(fetchItemFailure(data.message));
-          setError(true);
-          setLoading(false);
-          dispatch()
-          return;
-        }
-        dispatch(fetchItemSuccess(data));
-        setReviewListings(data.reviews);
-        setFormData(data);
-        setListing(data);
-        setLoading(false);
-        setError(false);
-      } catch (error) {
-        dispatch(fetchItemFailure(data.message));
-        setError(true);
-        setLoading(false);
-      }
-    };
-    fetchListing();
-  }, [params.listingId]);
-
-  const [formReview, setFormReview] = useState({
-    user: '',
-    rating: 0,
-    comment: '',
-  });
 
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -87,18 +54,49 @@ export default function Listing() {
     numReviews: 0,
   });
 
+  useEffect(() => {
+    const fetchListing = async () => {
+      try {
+        dispatch(fetchItemStart());
+        setLoading(true);
+        const res = await fetch(`/api/listing/get/${params.listingId}`);
+        const data = await res.json();
+        if (data.success === false) {
+          dispatch(fetchItemFailure(data.message));
+          setError(true);
+          setLoading(false);
+          dispatch()
+          return;
+        }
+        dispatch(fetchItemSuccess(data));
+
+        setReviewListings(data.reviews);
+        setFormData(data);
+        setListing(data);
+
+        setLoading(false);
+        setError(false);
+      } catch (error) {
+        dispatch(fetchItemFailure(data.message));
+        setError(true);
+        setLoading(false);
+      }
+    };
+    fetchListing();
+  }, [params.listingId]);
+
+  const [formReview, setFormReview] = useState({
+    user: currentUser.username,
+    rating: 0,
+    comment: '',
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
       setError(false);
 
-      setFormReview({
-        ...formReview,
-        user: currentUser.username,
-      });
-
-      console.log(currentUser.username);
       console.log(formReview.user);
 
       const res = await fetch(`/api/listing/update/${params.listingId}`, {
@@ -110,9 +108,12 @@ export default function Listing() {
           ...formData,
           reviews: [...formData.reviews, formReview],
           userRef: currentUser._id,
+          ratings: parseInt(formData.ratings) + parseInt(formReview.rating),
+          numReviews: formData.reviews.length + 1,
         }),
       });
       const data = await res.json();
+      console.log(data);
       setLoading(false);
       if (data.success === false) {
         setError(data.message);
@@ -184,6 +185,14 @@ export default function Listing() {
                 : listing.regularPrice.toLocaleString('en-US')}
               {listing.type === 'resort' && ' / month'}
             </p>
+            <p className='flex items-center mt-2 gap-2 text-slate-600 text-xl'>
+              <FaStar className='text-yellow-700' />
+              {listing.numReviews > 0
+                ? `${(listing.ratings / listing.numReviews).toFixed(2)}`
+                : `No rated yet`}
+              <FaComment className='text-yellow-700' />
+              {listing.numReviews}
+            </p>
             <p className='flex items-center mt-6 gap-2 text-slate-600  text-sm'>
               <FaMapMarkerAlt className='text-green-700' />
               {listing.address}
@@ -204,19 +213,19 @@ export default function Listing() {
             </p>
             <ul className='text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6'>
               <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaBed className='text-lg' />
+                <FaSmoking className='text-lg' />
                 {listing.smoking ? 'Smoking allowed' : 'No smoking'}
               </li>
               <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaBath className='text-lg' />
+                <FaWineGlass className='text-lg' />
                 {listing.bar ? 'Bar' : 'No bar'}
               </li>
               <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaParking className='text-lg' />
+                <FaWifi className='text-lg' />
                 {listing.wifi ? 'Wifi' : 'No wifi'}
               </li>
               <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaChair className='text-lg' />
+                <FaParking className='text-lg' />
                 {listing.parking ? 'Have parking spots' : 'No parking spot'}
               </li>
             </ul>

@@ -49,7 +49,7 @@ export default function Search() {
     ) {
       setSidebardata({
         searchTerm: searchTermFromUrl || '',
-        addressFromUrl: addressFromUrl || '',
+        address: addressFromUrl || '',
         type: typeFromUrl || '',
         smoking: smokingFromUrl === 'true' ? true : false,
         parking: parkingFromUrl === 'true' ? true : false,
@@ -264,7 +264,9 @@ export default function Search() {
               className='border rounded-lg p-3'
             >
               <option value='regularPrice_desc'>Price high to low</option>
-              <option value='regularPrice_asc'>Price low to hight</option>
+              <option value='regularPrice_asc'>Price low to high</option>
+              <option value='ratings_desc'>Rating high to low</option>
+              <option value='ratings_asc'>Rating low to high</option>
               <option value='createdAt_desc'>Latest</option>
               <option value='createdAt_asc'>Oldest</option>
             </select>

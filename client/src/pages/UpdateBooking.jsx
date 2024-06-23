@@ -26,6 +26,7 @@ export default function UpdateBooking() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  console.log(formData);
 
   useEffect(() => {
     const fetchBooking = async () => {
@@ -38,7 +39,6 @@ export default function UpdateBooking() {
       }
       setFormData(data);
     };
-
     fetchBooking();
   }, []);
 
@@ -94,10 +94,10 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='placeName'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
-                    value={currentItem.name}
+                    value={formData.placeName}
                     disabled
                 />
                 <input
@@ -106,10 +106,10 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='type'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
-                    value={currentItem.type}
+                    value={formData.type}
                     disabled
                 />
                 <input
@@ -118,10 +118,10 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='address'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
-                    value={currentItem.address}
+                    value={formData.address}
                     disabled
                 />
                 <input
@@ -130,7 +130,7 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='firstName'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.firstName}
@@ -141,7 +141,7 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='lastName'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.lastName}
@@ -152,7 +152,7 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='email'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.email}
@@ -163,7 +163,7 @@ export default function UpdateBooking() {
                     className='border p-3 rounded-lg'
                     id='telephone'
                     maxLength='62'
-                    minLength='10'
+                    minLength='1'
                     required
                     onChange={handleChange}
                     value={formData.telephone}
@@ -203,7 +203,7 @@ export default function UpdateBooking() {
                         type='number'
                         id='guests'
                         min='1'
-                        max='10'
+                        max='30'
                         required
                         className='p-3 border border-gray-300 rounded-lg'
                         onChange={handleChange}
