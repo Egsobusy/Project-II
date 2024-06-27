@@ -124,14 +124,14 @@ export default function Profile() {
         <input type="text" placeholder='password' id='password'
         className='border p-3 rounded-lg' onChange={handleChange}/>
         <button disabled={loading} className='bg-slate-700 text-white rounded-lg
-        p-3 hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...' : 'Update'}</button>
-        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
-          to={'/create-listing'}> Create Listing
+        p-3 hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...' : 'Update account'}</button>
+        <Link className=' bg-slate-700 text-white p-3 rounded-lg text-center hover:opacity-95'
+          to={'/create-listing'}> Create Place
         </Link>
-        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
+        <Link className=' bg-slate-700 text-white p-3 rounded-lg text-center hover:opacity-95'
           to={'/search'}> Create Booking
         </Link>
-        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
+        <Link className='bg-slate-700 text-white p-3 rounded-lg text-center hover:opacity-95'
           to={'/booking'}> My Bookings
         </Link>
       </form>

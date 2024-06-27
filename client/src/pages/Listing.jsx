@@ -183,7 +183,7 @@ export default function Listing() {
               {listing.offer
                 ? listing.discountPrice.toLocaleString('en-US')
                 : listing.regularPrice.toLocaleString('en-US')}
-              {listing.type === 'resort' && ' / month'}
+              {listing.type === 'resort' && ' / night'}
             </p>
             <p className='flex items-center mt-2 gap-2 text-slate-600 text-xl'>
               <FaStar className='text-yellow-700' />
